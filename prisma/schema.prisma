@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// A user
+model User {
+  id          String    @id @unique // Discord ID
+  donator     Boolean   @default(false) // Has donated at least once
+  device_name String    @default("Spoticord") // Device name to display in Spotify
+  request     Request?
+  accounts    Account[]
+}
+
+// A link request (for linking Spotify and Discord)
+model Request {
+  token   String @id @unique // Token to verify the request
+  user_id String @unique // Discord ID
+  expires BigInt // When the request expires
+  user    User   @relation(fields: [user_id], references: [id])
+}
+
+// A linked account (Spotify only for now)
+model Account {
+  user_id       String // Discord ID
+  type          String // Account type (Only Spotify for now)
+  access_token  String @db.VarChar(256) // Access token
+  refresh_token String @db.VarChar(256) // Refresh token
+  expires       BigInt // When the access token expires
+  user          User   @relation(fields: [user_id], references: [id])
+
+  @@id([user_id, type])
+}
