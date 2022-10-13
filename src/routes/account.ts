@@ -11,9 +11,20 @@ export default function (prisma: PrismaClient) {
     const { user_id, type, access_token, refresh_token, expires } = req.body;
 
     try {
-      // Filter duplicate accounts
-      if (await prisma.account.findFirst({ where: { user_id, type } }))
-        return res.status(400).json({ error: "Account already exists" });
+      // Create the user if they don't exist yet
+      if (!(await prisma.user.findFirst({ where: { id: user_id } }))) {
+        await prisma.user.create({ data: { id: user_id } });
+      }
+
+      // Update if already exists
+      if (await prisma.account.findFirst({ where: { user_id, type } })) {
+        const account = await prisma.account.update({
+          where: { user_id_type: { user_id, type } },
+          data: { access_token, refresh_token, expires },
+        });
+
+        return res.status(200).json(unbigify(account));
+      }
 
       const account = await prisma.account.create({
         data: { user_id, type, access_token, refresh_token, expires },

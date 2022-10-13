@@ -52,6 +52,11 @@ export const discord = {
     try {
       const response = (await client.post(Routes.oauth2TokenExchange(), {
         body: params,
+        auth: false,
+        passThroughBody: true,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       })) as RESTPostOAuth2AccessTokenResult;
 
       const { access_token, expires_in } = response;
