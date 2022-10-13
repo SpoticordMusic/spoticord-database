@@ -26,10 +26,10 @@ model Request {
   user    User   @relation(fields: [user_id], references: [id])
 }
 
-// A linked account (Spotify only for now)
+// A linked account
 model Account {
   user_id       String // Discord ID
-  type          String // Account type (Only Spotify for now)
+  type          String // Account type
   access_token  String @db.VarChar(256) // Access token
   refresh_token String @db.VarChar(256) // Refresh token
   expires       BigInt // When the access token expires

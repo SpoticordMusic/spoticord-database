@@ -31,17 +31,57 @@ export default function (prisma: PrismaClient) {
     if (!result)
       return res
         .status(404)
-        .json({ error: `No spotify account found for user: ${id}` });
+        .json({ error: `No Spotify account found for user: ${id}` });
 
+    // If the token has expired, attempt to refresh it
     if (!result.expires || Date.now() > result.expires - 60000n) {
-      const refresh_result = await util.requestNewToken(result.refresh_token);
+      const refresh_result = await util.spotify.refresh_token(
+        result.refresh_token
+      );
 
       if (!refresh_result) {
         return res.status(400).json({ error: "User token has expired" });
       }
 
+      // Put new access token and expiry in the database
       await prisma.account.update({
         where: { user_id_type: { user_id: id, type: "spotify" } },
+        data: refresh_result,
+      });
+
+      return res.json({ id, access_token: refresh_result.access_token });
+    }
+
+    return res.json({ id, access_token: result.access_token });
+  });
+
+  // Get the user's Discord access token
+  // This will automatically refresh the token if it's expired
+  router.get("/:id/discord/access_token", async (req, res) => {
+    const { id } = req.params;
+
+    const result = await prisma.account.findFirst({
+      where: { user_id: id, type: "discord" },
+    });
+
+    if (!result)
+      return res
+        .status(404)
+        .json({ error: `No Discord account found for user: ${id}` });
+
+    // If the token has expired, attempt to refresh it
+    if (!result.expires || Date.now() > result.expires - 60000n) {
+      const refresh_result = await util.discord.refresh_token(
+        result.refresh_token
+      );
+
+      if (!refresh_result) {
+        return res.status(400).json({ error: "User token has expired" });
+      }
+
+      // Put new access token and expiry in the database
+      await prisma.account.update({
+        where: { user_id_type: { user_id: id, type: "discord" } },
         data: refresh_result,
       });
 

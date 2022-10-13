@@ -1,0 +1,34 @@
+version: '3.9'
+
+name: spoticord-database
+
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      # Database will not be exposed to the outside world, so this is fine
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-spoticord}
+      MYSQL_USER: ${MYSQL_USER:-spoticord}
+    volumes:
+      - db_data:/var/lib/mysql
+    
+  api:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}
+      - SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DATABASE_URL=mysql://spoticord:${MYSQL_PASSWORD}@db:3306/spoticord
+    ports:
+      - ${PORT:-3000}:3000
+
+volumes:
+  db_data:

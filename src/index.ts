@@ -15,6 +15,9 @@ import { initialize } from "./jobs";
 
 assert(process.env.SPOTIFY_CLIENT_ID, "SPOTIFY_CLIENT_ID is not set");
 assert(process.env.SPOTIFY_CLIENT_SECRET, "SPOTIFY_CLIENT_SECRET is not set");
+assert(process.env.DISCORD_CLIENT_ID, "DISCORD_CLIENT_ID is not set");
+assert(process.env.DISCORD_CLIENT_SECRET, "DISCORD_CLIENT_SECRET is not set");
+assert(process.env.DISCORD_TOKEN, "DISCORD_TOKEN is not set");
 
 const port = parseInt(process.env.PORT as string) || 3000;
 
@@ -28,7 +31,7 @@ app.use("/user", user(prisma));
 app.use("/request", request(prisma));
 app.use("/account", account(prisma));
 app.use("/spotify", spotify(prisma));
-process.env.DISCORD_TOKEN && app.use("/discord", discord()); // Add some discord QoL routes if the token is set
+app.use("/discord", discord());
 
 app.listen(port, () => {
   console.log(`Server started on port http://localhost:${port}`);

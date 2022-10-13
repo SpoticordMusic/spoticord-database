@@ -25,6 +25,34 @@ export default function (prisma: PrismaClient) {
     }
   });
 
+  // Get all accounts for a certain user
+  router.get("/:user_id", async (req, res) => {
+    const { user_id } = req.params;
+
+    try {
+      const accounts = await prisma.account.findMany({
+        where: { user_id },
+      });
+
+      res.json(accounts.map(unbigify));
+    } catch (ex) {}
+  });
+
+  // Get a certain account for a certain user
+  router.get("/:user_id/:type", async (req, res) => {
+    const { user_id, type } = req.params;
+
+    try {
+      const account = await prisma.account.findFirst({
+        where: { user_id, type },
+      });
+
+      if (!account) return res.status(404).json({ error: "Account not found" });
+
+      res.json(unbigify(account));
+    } catch (ex) {}
+  });
+
   // Delete account by user id and type
   router.delete("/:user_id/:type", async (req, res) => {
     const { user_id, type } = req.params;
