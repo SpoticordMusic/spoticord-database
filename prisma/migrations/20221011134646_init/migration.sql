@@ -1,7 +1,6 @@
 -- CreateTable
 CREATE TABLE `User` (
     `id` VARCHAR(191) NOT NULL,
-    `donator` BOOLEAN NOT NULL DEFAULT false,
     `device_name` VARCHAR(191) NOT NULL DEFAULT 'Spoticord',
 
     UNIQUE INDEX `User_id_key`(`id`),
