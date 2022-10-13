@@ -33,6 +33,7 @@ export default function (prisma: PrismaClient) {
     }
   });
 
+  // Delete a request by user id
   router.delete("/:user_id", async (req, res) => {
     const { user_id } = req.params;
 

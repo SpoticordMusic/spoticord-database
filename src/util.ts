@@ -5,11 +5,13 @@ import {
   RESTPostOAuth2AccessTokenResult,
 } from "./lib/discord";
 
-const RX_ISDIGIT = /^\d+$/;
-
-export const is_digit = (input: string) => !!input.match(RX_ISDIGIT);
-
 export const spotify = {
+  /**
+   * Refresh a Spotify token
+   *
+   * @param refresh_token The refresh token to use
+   * @returns The new access token and expiry
+   */
   async refresh_token(refresh_token: string) {
     const params = new URLSearchParams();
     params.append("grant_type", "refresh_token");
@@ -39,6 +41,12 @@ export const spotify = {
 };
 
 export const discord = {
+  /**
+   * Refresh a Discord token
+   *
+   * @param refresh_token The refresh token to use
+   * @returns The new access token and expiry
+   */
   async refresh_token(refresh_token: string) {
     const params = new URLSearchParams();
 
@@ -68,6 +76,12 @@ export const discord = {
   },
 };
 
+/**
+ * Converts all BigInts inside of an object to normal numbers, recursively.
+ *
+ * @param input Any object
+ * @returns The same object, without BigInts
+ */
 export const unbigify = (input: { [key: string]: any }) => {
   // Loop over all the keys in the object, convert any BigInts to numbers.
   // If the key is an object, recurse.

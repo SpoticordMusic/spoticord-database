@@ -26,6 +26,7 @@ export default function (prisma: PrismaClient) {
         return res.status(200).json(unbigify(account));
       }
 
+      // Create the account
       const account = await prisma.account.create({
         data: { user_id, type, access_token, refresh_token, expires },
       });
