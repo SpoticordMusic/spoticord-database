@@ -11,7 +11,7 @@ CREATE TABLE `User` (
 CREATE TABLE `Request` (
     `token` VARCHAR(191) NOT NULL,
     `user_id` VARCHAR(191) NOT NULL,
-    `expires` BIGINT NOT NULL,
+    `expires` DOUBLE NOT NULL,
 
     UNIQUE INDEX `Request_token_key`(`token`),
     UNIQUE INDEX `Request_user_id_key`(`user_id`),
@@ -24,7 +24,7 @@ CREATE TABLE `Account` (
     `type` VARCHAR(191) NOT NULL,
     `access_token` VARCHAR(256) NOT NULL,
     `refresh_token` VARCHAR(256) NOT NULL,
-    `expires` BIGINT NOT NULL,
+    `expires` DOUBLE NOT NULL,
 
     PRIMARY KEY (`user_id`, `type`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

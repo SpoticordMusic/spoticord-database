@@ -22,7 +22,7 @@ model User {
 model Request {
   token   String @id @unique // Token to verify the request
   user_id String @unique // Discord ID
-  expires BigInt // When the request expires
+  expires Float // When the request expires
   user    User   @relation(fields: [user_id], references: [id])
 }
 
@@ -32,7 +32,7 @@ model Account {
   type          String // Account type
   access_token  String @db.VarChar(256) // Access token
   refresh_token String @db.VarChar(256) // Refresh token
-  expires       BigInt // When the access token expires
+  expires       Float // When the access token expires
   user          User   @relation(fields: [user_id], references: [id])
 
   @@id([user_id, type])

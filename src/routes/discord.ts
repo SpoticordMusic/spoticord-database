@@ -49,6 +49,36 @@ export default function () {
     }
   });
 
+  // Revoke Discord access token
+  router.post("/token/revoke", async (req, res) => {
+    const { access_token } = req.body;
+    const { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } = process.env;
+
+    const params = new URLSearchParams();
+    params.append("token", access_token);
+    params.append("client_id", DISCORD_CLIENT_ID!);
+    params.append("client_secret", DISCORD_CLIENT_SECRET!);
+
+    const client = getClient();
+
+    try {
+      const response = await client.post(Routes.oauth2TokenRevocation(), {
+        body: params,
+        auth: false,
+        passThroughBody: true,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+
+      res.json(response);
+    } catch (e) {
+      const error = e as DiscordAPIError;
+
+      res.status(error.status).json({ success: false, error: error.code });
+    }
+  });
+
   // Get the avatar url for a given user id
   router.get("/avatar/:id", async (req, res) => {
     const { id } = req.params;

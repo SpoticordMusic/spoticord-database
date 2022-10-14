@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import { randomBytes } from "crypto";
 import { Router } from "express";
 import { PRISMA_ERRORS } from "../errors";
-import { unbigify } from "../util";
 
 export default function (prisma: PrismaClient) {
   const router = Router();
@@ -33,6 +32,22 @@ export default function (prisma: PrismaClient) {
     }
   });
 
+  router.get("/by-user/:user_id", async (req, res) => {
+    const { user_id } = req.params;
+
+    try {
+      const request = await prisma.request.findFirst({
+        where: { user_id },
+      });
+
+      if (!request) return res.status(404).json({ error: "Not Found" });
+
+      res.json(request);
+    } catch (ex) {
+      res.status(400).json({ error: "Bad Request" });
+    }
+  });
+
   // Delete a request by user id
   router.delete("/:user_id", async (req, res) => {
     const { user_id } = req.params;
@@ -40,7 +55,7 @@ export default function (prisma: PrismaClient) {
     try {
       const deleted = await prisma.request.delete({ where: { user_id } });
 
-      res.status(200).json(unbigify(deleted));
+      res.status(200).json(deleted);
     } catch (ex: any) {
       console.error(ex);
 

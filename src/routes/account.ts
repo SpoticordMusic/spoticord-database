@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
 import { PRISMA_ERRORS } from "../errors";
-import { unbigify } from "../util";
 
 export default function (prisma: PrismaClient) {
   const router = Router();
@@ -23,7 +22,7 @@ export default function (prisma: PrismaClient) {
           data: { access_token, refresh_token, expires },
         });
 
-        return res.status(200).json(unbigify(account));
+        return res.status(200).json(account);
       }
 
       // Create the account
@@ -31,7 +30,7 @@ export default function (prisma: PrismaClient) {
         data: { user_id, type, access_token, refresh_token, expires },
       });
 
-      res.status(201).json(unbigify(account));
+      res.status(201).json(account);
     } catch (ex) {
       res.status(400).json({ error: "Bad Request" });
     }
@@ -46,7 +45,7 @@ export default function (prisma: PrismaClient) {
         where: { user_id },
       });
 
-      res.json(accounts.map(unbigify));
+      res.json(accounts);
     } catch (ex) {}
   });
 
@@ -61,7 +60,7 @@ export default function (prisma: PrismaClient) {
 
       if (!account) return res.status(404).json({ error: "Account not found" });
 
-      res.json(unbigify(account));
+      res.json(account);
     } catch (ex) {}
   });
 

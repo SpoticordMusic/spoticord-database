@@ -34,7 +34,7 @@ export default function (prisma: PrismaClient) {
         .json({ error: `No Spotify account found for user: ${id}` });
 
     // If the token has expired, attempt to refresh it
-    if (!result.expires || Date.now() > result.expires - 60000n) {
+    if (!result.expires || Date.now() > result.expires - 60000) {
       const refresh_result = await util.spotify.refresh_token(
         result.refresh_token
       );
@@ -70,7 +70,7 @@ export default function (prisma: PrismaClient) {
         .json({ error: `No Discord account found for user: ${id}` });
 
     // If the token has expired, attempt to refresh it
-    if (!result.expires || Date.now() > result.expires - 60000n) {
+    if (!result.expires || Date.now() > result.expires - 60000) {
       const refresh_result = await util.discord.refresh_token(
         result.refresh_token
       );
@@ -102,7 +102,7 @@ export default function (prisma: PrismaClient) {
 
     if (!result) return res.status(404).json({ error: "Not Found" });
 
-    res.json(util.unbigify(result));
+    res.json(result);
   });
 
   // Create a new user

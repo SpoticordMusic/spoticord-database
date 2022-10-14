@@ -75,28 +75,3 @@ export const discord = {
     }
   },
 };
-
-/**
- * Converts all BigInts inside of an object to normal numbers, recursively.
- *
- * @param input Any object
- * @returns The same object, without BigInts
- */
-export const unbigify = (input: { [key: string]: any }) => {
-  // Loop over all the keys in the object, convert any BigInts to numbers.
-  // If the key is an object, recurse.
-
-  const output: { [key: string]: any } = {};
-
-  for (const [key, value] of Object.entries(input)) {
-    if (typeof value === "bigint") {
-      output[key] = Number(value);
-    } else if (typeof value === "object") {
-      output[key] = unbigify(value);
-    } else {
-      output[key] = value;
-    }
-  }
-
-  return output;
-};
