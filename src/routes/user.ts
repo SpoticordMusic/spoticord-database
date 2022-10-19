@@ -118,38 +118,24 @@ export default function (prisma: PrismaClient) {
     }
   });
 
-  // Add Spotify credentials linked to user
-  router.post("/:id/spotify", async (req, res) => {
-    return res.status(400).json({ error: "Not implemented" });
-
+  // Update a user
+  router.patch("/:id", async (req, res) => {
     const { id } = req.params;
-    const { access_token, refresh_token } = req.body;
+    const { data } = req.body;
 
     try {
-      // Check for duplicate Spotify account
-      if (
-        await prisma.account.findFirst({
-          where: { user_id: id, type: "spotify" },
-        })
-      ) {
-        return res
-          .status(400)
-          .json({ error: "User already has a spotify account" });
-      }
-
-      const result = await prisma.account.create({
-        data: {
-          user_id: id,
-          type: "spotify",
-          access_token,
-          refresh_token,
-          expires: 0,
-        },
+      const result = await prisma.user.update({
+        where: { id },
+        data,
       });
 
-      res.status(201).json(result);
-    } catch {
-      res.status(400).json({ error: "Bad request" });
+      res.json(result);
+    } catch (ex) {
+      if ((ex as any).code === "P2002") {
+        return res.status(400).json({ error: "User not found" });
+      }
+
+      return res.status(400).json({ error: "Bad Request" });
     }
   });
 

@@ -13,7 +13,7 @@ datasource db {
 // A user
 model User {
   id          String    @id @unique // Discord ID
-  device_name String    @default("Spoticord") // Device name to display in Spotify
+  device_name String    @default("Spoticord") @db.VarChar(16) // Device name to display in Spotify
   request     Request?
   accounts    Account[]
 }
