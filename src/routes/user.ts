@@ -121,7 +121,7 @@ export default function (prisma: PrismaClient) {
   // Update a user
   router.patch("/:id", async (req, res) => {
     const { id } = req.params;
-    const { data } = req.body;
+    const data = req.body;
 
     try {
       const result = await prisma.user.update({
