@@ -40,7 +40,16 @@ export default function (prisma: PrismaClient) {
       );
 
       if (!refresh_result) {
-        return res.status(400).json({ error: "User token has expired" });
+        // Automatically delete account once it has expired
+        try {
+          await prisma.account.delete({
+            where: {
+              user_id_type: { user_id: result.user_id, type: "spotify" },
+            },
+          });
+        } catch {}
+
+        return res.status(400).json({ error: "Account access has expired" });
       }
 
       // Put new access token and expiry in the database
@@ -76,7 +85,16 @@ export default function (prisma: PrismaClient) {
       );
 
       if (!refresh_result) {
-        return res.status(400).json({ error: "User token has expired" });
+        // Automatically delete account once it has expired
+        try {
+          await prisma.account.delete({
+            where: {
+              user_id_type: { user_id: result.user_id, type: "discord" },
+            },
+          });
+        } catch {}
+
+        return res.status(400).json({ error: "Account access has expired" });
       }
 
       // Put new access token and expiry in the database
