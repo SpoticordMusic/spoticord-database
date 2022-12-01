@@ -29,5 +29,5 @@ jobs:
         with:
           context: .
           tags: |
-            ${{ secrets.REGISTRY_URL }}/spoticord-database:latest
+            ${{ secrets.REGISTRY_URL }}/spoticord/database:latest
           push: ${{ github.ref == 'refs/heads/main' }}
