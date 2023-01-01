@@ -17,7 +17,7 @@ RUN yarn build
 FROM node:18-alpine
 
 RUN apk update \
-	&& apk add --no-cache openssl\
+	&& apk add --no-cache openssl1.1-compat \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /var/cache/apk/*
 
