@@ -32,7 +32,6 @@ export default function (prisma: PrismaClient) {
 
       res.status(201).json(account);
     } catch (ex) {
-      console.error(ex);
       res.status(400).json({ error: "Bad Request" });
     }
   });
