@@ -16,6 +16,11 @@ RUN yarn build
 
 FROM node:18-alpine
 
+RUN apk update \
+	&& apk add --no-cache openssl\
+	&& rm -rf /var/lib/apt/lists/* \
+	&& rm -rf /var/cache/apk/*
+
 WORKDIR /app
 
 COPY --from=builder /app/node_modules ./node_modules
