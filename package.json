@@ -11,7 +11,7 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "start": "node build/index.js",
-    "migrate:start": "prisma migrate deploy && node ./build"
+    "migrate:start": "prisma migrate deploy && prisma generate && node ./build"
   },
   "devDependencies": {
     "@types/cron": "^2.0.0",
