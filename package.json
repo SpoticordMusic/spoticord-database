@@ -5,7 +5,7 @@
   "main": "build/",
   "repository": "tba",
   "author": "DaXcess",
-  "license": "MIT",
+  "license": "GPLv3",
   "private": false,
   "scripts": {
     "dev": "nodemon src/index.ts",
