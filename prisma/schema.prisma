@@ -30,8 +30,8 @@ model Request {
 model Account {
   user_id       String // Discord ID
   type          String // Account type
-  access_token  String @db.VarChar(256) // Access token
-  refresh_token String @db.VarChar(256) // Refresh token
+  access_token  String @db.VarChar(1024) // Access token
+  refresh_token String @db.VarChar(1024) // Refresh token
   expires       Float // When the access token expires
   user          User   @relation(fields: [user_id], references: [id])
 
