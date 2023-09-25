@@ -96,12 +96,19 @@ export default function () {
       const { avatar, discriminator } = response.data;
 
       // Check if the user has a custom avatar
-      if (!avatar)
+      if (!avatar) {
+        let defaultAvatar = "";
+
+        if (discriminator === "0") {
+          defaultAvatar = ((BigInt(id) >> 22n) % 6n).toString();
+        } else {
+          defaultAvatar = (Number(discriminator) % 5).toString();
+        }
+
         return res.json({
-          avatar: `https://cdn.discordapp.com/embed/avatars/${
-            Number(discriminator) % 5
-          }.png`,
+          avatar: `https://cdn.discordapp.com/embed/avatars/${defaultAvatar}.png`,
         });
+      }
 
       res.json({
         avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}.webp`,
