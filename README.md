@@ -1,5 +1,8 @@
 # Spoticord Database
 
+> [!WARNING]
+> This application is obsolete. Database communication will flow directly between the target application and the database using native calls, thereby making this middleman no longer necessary.
+
 This is the primary way for all Spoticord related services to communicate with the backend database and some third party APIs.
 
 Spoticord is currently designed around MySQL, but [any database supported by Prisma](https://www.prisma.io/docs/reference/database-reference/supported-databases) should work just fine.
